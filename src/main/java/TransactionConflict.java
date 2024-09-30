@@ -3,6 +3,10 @@ import com.apple.foundationdb.FDB;
 import com.apple.foundationdb.Transaction;
 import com.apple.foundationdb.tuple.Tuple;
 
+import java.sql.Time;
+
+import static java.lang.Thread.sleep;
+
 /**
  * @version 1.0
  * @description understand transaction conflict
@@ -10,7 +14,7 @@ import com.apple.foundationdb.tuple.Tuple;
  */
 
 public class TransactionConflict {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         BasicFDBOps.clearAll();
         FDB fdb = FDB.selectAPIVersion(620);
         Database db = fdb.open();
@@ -64,10 +68,13 @@ public class TransactionConflict {
         transactionT1.start();
         transactionT2.start();
 
+
+
         try {
             // Wait for both transactions to finish
-            transactionT1.join();
             transactionT2.join();
+            transactionT1.join();
+
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
